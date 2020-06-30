@@ -11,7 +11,7 @@ TL;DR
 More Info on SMS lengths here
 https://www.world-text.com/docs/sms-length.php
 
-Examples
+**Examples**
 
 Simple GSM7 Char body
 ```
