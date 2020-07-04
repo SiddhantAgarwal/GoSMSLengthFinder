@@ -7,7 +7,7 @@ const (
 )
 
 var (
-	gsm7BitText = map[rune]bool{
+	gsm7BitExt = map[rune]bool{
 		'\f': true,
 		'^':  true,
 		'{':  true,

@@ -8,7 +8,7 @@ import (
 func getCharSet(message string) string {
 	for _, char := range message {
 		if _, ok := gsm7Bit[char]; !ok {
-			if _, ok := gsm7BitText[char]; !ok {
+			if _, ok := gsm7BitExt[char]; !ok {
 				return gsmCharsetUnicode
 			}
 		}
@@ -17,36 +17,23 @@ func getCharSet(message string) string {
 }
 
 func calculate7BitLengthParts(message string) int64 {
-	charsInMessage := utf8.RuneCountInString(message)
 
 	payload := ""
 
 	for _, char := range message {
-		if _, ok := gsm7BitText[char]; ok {
+		if _, ok := gsm7BitExt[char]; ok {
 			payload += string(gsm7BitEsc)
 		}
 		payload += string(char)
 	}
 
-	if charsInMessage <= 160 {
+	if len(payload) <= 160 {
 		return 1
 	}
 
 	parts := int(math.Ceil(float64(len(payload)) / 153))
-	remainChars := len(payload) - int((math.Floor(float64(len(payload))/153) * 153))
-
-	if remainChars >= (parts - 1) {
-		return int64(parts)
-	}
-
-	for index := 0; index < len(payload); index++ {
-		if len(payload) >= 152 && payload[152] == gsm7BitEsc {
-			payload = payload[0:152]
-		}
-		payload = payload[0:153]
-	}
-
 	return int64(parts)
+
 }
 
 // GetSMSParts : Return numbers of SMS in multipart sms to be sent.
